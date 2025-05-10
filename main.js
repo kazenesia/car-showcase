@@ -2,17 +2,17 @@ const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
 const scene = new BABYLON.Scene(engine);
 
-// Ganti warna background menjadi biru muda
+// Warna latar biru muda
 scene.clearColor = new BABYLON.Color3.FromHexString("#cceeff");
 
-// Kamera dan pencahayaan
+// Kamera dan cahaya
 const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2.5, 20, BABYLON.Vector3.Zero(), scene);
 camera.attachControl(canvas, true);
 
-const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 light.intensity = 1;
 
-// Ground dan environment
+// Lingkungan
 scene.createDefaultEnvironment({
     createGround: true,
     groundYBias: 1,
@@ -20,7 +20,7 @@ scene.createDefaultEnvironment({
     enableGroundShadow: true
 });
 
-// GUI
+// GUI info
 const gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 const infoPanel = new BABYLON.GUI.Rectangle();
 infoPanel.width = "300px";
@@ -48,13 +48,8 @@ function hideInfo() {
     infoPanel.isVisible = false;
 }
 
-function toggleRotation(mesh) {
-    const isOpen = mesh.rotation.y > 0.1;
-    BABYLON.Animation.CreateAndStartAnimation("rotateAnim", mesh, "rotation.y", 30, 30, mesh.rotation.y, isOpen ? 0 : Math.PI / 2, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-}
-
-// Load model
-BABYLON.SceneLoader.Append("./assets/", "car_model.glb", scene, function () {
+// Load model .glb dari GitHub Pages
+BABYLON.SceneLoader.Append("./assets/car_model.glb", scene, function () {
     console.log("Model loaded!");
     scene.meshes.forEach(mesh => console.log("Mesh:", mesh.name));
 
@@ -71,7 +66,7 @@ BABYLON.SceneLoader.Append("./assets/", "car_model.glb", scene, function () {
     console.error("Error loading model:", message);
 });
 
-// Render loop
+// Render
 engine.runRenderLoop(() => {
     scene.render();
 });
