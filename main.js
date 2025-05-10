@@ -58,7 +58,6 @@ BABYLON.SceneLoader.Append("./assets/", "car_model.glb", scene, function () {
     console.log("Model loaded!");
     scene.meshes.forEach(mesh => console.log("Mesh:", mesh.name));
 
-    // Interaksi klik
     scene.onPointerObservable.add((pointerInfo) => {
         if (pointerInfo.type === BABYLON.PointerEventTypes.POINTERPICK) {
             const picked = pointerInfo.pickInfo.pickedMesh;
