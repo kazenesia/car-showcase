@@ -1,0 +1,7 @@
+car-showcase/
++-- index.html
++-- main.js
++-- assets/
+¦   +-- car_model.glb
++-- styles/
+¦   +-- style.css
