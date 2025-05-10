@@ -54,14 +54,11 @@ function toggleRotation(mesh) {
 }
 
 // Load model
-BABYLON.SceneLoader.Append("", "assets/", "car_model.glb", scene, function (meshes) {
-    console.log("Model loaded!", meshes);
-    meshes.forEach(mesh => console.log("Mesh:", mesh.name));
+BABYLON.SceneLoader.Append("assets/", "car_model.glb", scene, function () {
+    console.log("Model loaded!");
+    scene.meshes.forEach(mesh => console.log("Mesh:", mesh.name));
 
-    const car = meshes[0];
-    car.position = BABYLON.Vector3.Zero();
-    car.scaling = new BABYLON.Vector3(1.5, 1.5, 1.5);
-
+    // Interaksi klik
     scene.onPointerObservable.add((pointerInfo) => {
         if (pointerInfo.type === BABYLON.PointerEventTypes.POINTERPICK) {
             const picked = pointerInfo.pickInfo.pickedMesh;
