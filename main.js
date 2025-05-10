@@ -54,8 +54,8 @@ function toggleRotation(mesh) {
 }
 
 // Load model
-BABYLON.SceneLoader.ImportMesh("", "assets/", "car_model.glb", scene, function (meshes) {
-    console.log("Model loaded:", meshes);
+BABYLON.SceneLoader.Append("", "assets/", "car_model.glb", scene, function (meshes) {
+    console.log("Model loaded!", meshes);
     meshes.forEach(mesh => console.log("Mesh:", mesh.name));
 
     const car = meshes[0];
