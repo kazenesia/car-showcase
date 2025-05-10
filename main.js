@@ -55,7 +55,7 @@ function toggleRotation(mesh) {
 
 // Load model
 BABYLON.SceneLoader.ImportMesh("", "assets/", "car_model.glb", scene, function (meshes) {
-    console.log("Model loaded:");
+    console.log("Model loaded:", meshes);
     meshes.forEach(mesh => console.log("Mesh:", mesh.name));
 
     const car = meshes[0];
@@ -71,6 +71,8 @@ BABYLON.SceneLoader.ImportMesh("", "assets/", "car_model.glb", scene, function (
             showInfo("Bagian Mobil", `Nama mesh: ${picked.name}`);
         }
     });
+}, null, function (scene, message) {
+    console.error("Error loading model:", message);
 });
 
 // Render loop
