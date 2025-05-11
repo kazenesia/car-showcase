@@ -2,71 +2,40 @@ const canvas = document.getElementById("renderCanvas");
 const engine = new BABYLON.Engine(canvas, true);
 const scene = new BABYLON.Scene(engine);
 
-// Warna latar biru muda
+// Warna latar
 scene.clearColor = new BABYLON.Color3.FromHexString("#cceeff");
 
-// Kamera dan cahaya
-const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2.5, 20, BABYLON.Vector3.Zero(), scene);
+// Kamera dinamis untuk framing otomatis
+const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2.5, 10, BABYLON.Vector3.Zero(), scene);
 camera.attachControl(canvas, true);
 
+// Cahaya dasar
 const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-light.intensity = 1;
 
-// Lingkungan
-scene.createDefaultEnvironment({
-    createGround: true,
-    groundYBias: 1,
-    skyboxColor: new BABYLON.Color3.FromHexString("#cceeff"),
-    enableGroundShadow: true
+// Aktifkan debug layer
+scene.debugLayer.show({
+    embedMode: true
 });
 
-// GUI info
-const gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-const infoPanel = new BABYLON.GUI.Rectangle();
-infoPanel.width = "300px";
-infoPanel.height = "100px";
-infoPanel.cornerRadius = 10;
-infoPanel.color = "white";
-infoPanel.thickness = 2;
-infoPanel.background = "black";
-infoPanel.alpha = 0.8;
-infoPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-infoPanel.top = "-20px";
-infoPanel.isVisible = false;
-gui.addControl(infoPanel);
-
-const infoText = new BABYLON.GUI.TextBlock();
-infoText.color = "white";
-infoText.fontSize = 14;
-infoPanel.addControl(infoText);
-
-function showInfo(title, description) {
-    infoText.text = `${title}\n${description}`;
-    infoPanel.isVisible = true;
-}
-function hideInfo() {
-    infoPanel.isVisible = false;
-}
-
-// Load model .glb dari GitHub Pages
+// Load model dengan path lengkap
 BABYLON.SceneLoader.Append("./assets/car_model.glb", scene, function () {
-    console.log("Model loaded!");
-    scene.meshes.forEach(mesh => console.log("Mesh:", mesh.name));
+    console.log("✅ Model berhasil dimuat.");
 
-    scene.onPointerObservable.add((pointerInfo) => {
-        if (pointerInfo.type === BABYLON.PointerEventTypes.POINTERPICK) {
-            const picked = pointerInfo.pickInfo.pickedMesh;
-            if (!picked) return;
-
-            console.log("Clicked:", picked.name);
-            showInfo("Bagian Mobil", `Nama mesh: ${picked.name}`);
-        }
+    // Tampilkan semua mesh dan bounding box
+    scene.meshes.forEach(mesh => {
+        console.log("Mesh:", mesh.name, mesh.position);
+        mesh.showBoundingBox = true;
+        mesh.isPickable = true;
     });
+
+    // Auto fokus kamera ke seluruh scene
+    scene.createDefaultCameraOrLight(true, true, true);
+    scene.activeCamera.attachControl(canvas, true);
 }, null, function (scene, message) {
-    console.error("Error loading model:", message);
+    console.error("❌ Gagal memuat model:", message);
 });
 
-// Render
+// Render loop
 engine.runRenderLoop(() => {
     scene.render();
 });
