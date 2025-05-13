@@ -1,37 +1,61 @@
 window.addEventListener('DOMContentLoaded', function () {
-    // Get canvas element
+    // Dapatkan canvas dari HTML
     const canvas = document.getElementById('renderCanvas');
 
-    // Create Babylon engine
+    // Buat engine Babylon.js
     const engine = new BABYLON.Engine(canvas, true);
 
-    // Create scene
+    // Buat scene baru
     const scene = new BABYLON.Scene(engine);
-    scene.clearColor = new BABYLON.Color3(0.95, 0.95, 0.95); // Warna background cerah
 
-    // Camera
-    const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 3, 10, BABYLON.Vector3.Zero(), scene);
+    // Ubah warna background menjadi cerah (misal: putih kebiruan)
+    scene.clearColor = new BABYLON.Color4(0.9, 0.95, 1, 1);
+
+    // Tambahkan kamera
+    const camera = new BABYLON.ArcRotateCamera(
+        "Camera",
+        BABYLON.Tools.ToRadians(135),
+        BABYLON.Tools.ToRadians(70),
+        10,
+        new BABYLON.Vector3(0, 1, 0),
+        scene
+    );
     camera.attachControl(canvas, true);
+    camera.wheelPrecision = 20;
     camera.lowerRadiusLimit = 2;
     camera.upperRadiusLimit = 50;
-    camera.wheelDeltaPercentage = 0.01;
 
-    // Light
-    const light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-    light1.intensity = 1.0;
+    // Tambahkan pencahayaan
+    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 1.2;
 
-    const light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(-1, -2, -1), scene);
-    light2.position = new BABYLON.Vector3(20, 40, 20);
-    light2.intensity = 0.6;
+    // Tambahkan ground (opsional)
+    const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 20, height: 20 }, scene);
+    const groundMaterial = new BABYLON.StandardMaterial("groundMat", scene);
+    groundMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
+    ground.material = groundMaterial;
+    ground.receiveShadows = true;
 
-    // Load model (GLTF)
-    BABYLON.SceneLoader.Append("assets/", "car_model.gltf", scene, function (scene) {
-        console.log("Model loaded successfully!");
-    }, null, function (scene, message) {
-        console.error("Failed to load model:", message);
-    });
+    // Load model GLTF (dengan car_model.gltf dan car_model.bin)
+    BABYLON.SceneLoader.ImportMesh(
+        null,
+        "assets/",
+        "car_model.gltf",
+        scene,
+        function (meshes) {
+            console.log("Model berhasil dimuat:", meshes);
 
-    // Render loop
+            const car = meshes[0];
+            car.position = new BABYLON.Vector3(0, 0, 0);
+            car.scaling = new BABYLON.Vector3(1, 1, 1);
+        },
+        null,
+        function (scene, message, exception) {
+            console.error("Gagal memuat model:", message, exception);
+        }
+    );
+
+    // Render scene
     engine.runRenderLoop(function () {
         scene.render();
     });
