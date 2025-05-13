@@ -27,8 +27,8 @@ window.addEventListener('DOMContentLoaded', function () {
         });
 
         // Skalakan agar model terlihat besar
-        root.scaling = new BABYLON.Vector3(50, 50, 50);
-        root.position = new BABYLON.Vector3(0, 0, 0);
+        root.scaling = new BABYLON.Vector3(5, 5, 5);
+        root.position = new BABYLON.Vector3(10, 10, 10);
 
         // Fokus kamera ke model
         camera.target = root.position;
