@@ -1,44 +1,43 @@
-const canvas = document.getElementById("renderCanvas");
-const engine = new BABYLON.Engine(canvas, true);
-const scene = new BABYLON.Scene(engine);
+window.addEventListener('DOMContentLoaded', function () {
+    // Get canvas element
+    const canvas = document.getElementById('renderCanvas');
 
-// Warna background
-scene.clearColor = new BABYLON.Color3.FromHexString("#cceeff");
+    // Create Babylon engine
+    const engine = new BABYLON.Engine(canvas, true);
 
-// Kamera dan cahaya
-const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2.2, 10, BABYLON.Vector3.Zero(), scene);
-camera.attachControl(canvas, true);
+    // Create scene
+    const scene = new BABYLON.Scene(engine);
+    scene.clearColor = new BABYLON.Color3(0.95, 0.95, 0.95); // Warna background cerah
 
-const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+    // Camera
+    const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 3, 10, BABYLON.Vector3.Zero(), scene);
+    camera.attachControl(canvas, true);
+    camera.lowerRadiusLimit = 2;
+    camera.upperRadiusLimit = 50;
+    camera.wheelDeltaPercentage = 0.01;
 
-// Load model dari GitHub Pages
-BABYLON.SceneLoader.Append("./assets/", "car_model.glb", scene, function () {
-    console.log("✅ Model berhasil dimuat!");
+    // Light
+    const light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+    light1.intensity = 1.0;
 
-    // Pastikan semua mesh terlihat dan berskala wajar
-    scene.meshes.forEach(mesh => {
-        mesh.scaling = new BABYLON.Vector3(200, 200, 200); // Perbesar karena model kecil
-        mesh.isVisible = true;
-        mesh.visibility = 1;
+    const light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(-1, -2, -1), scene);
+    light2.position = new BABYLON.Vector3(20, 40, 20);
+    light2.intensity = 0.6;
 
-        if (mesh.material) {
-            if (mesh.material.albedoColor) mesh.material.albedoColor = new BABYLON.Color3(1, 1, 1);
-            if (mesh.material.diffuseColor) mesh.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
-            mesh.material.alpha = 1;
-        }
+    // Load model (GLTF)
+    BABYLON.SceneLoader.Append("assets/", "car_model.gltf", scene, function (scene) {
+        console.log("Model loaded successfully!");
+    }, null, function (scene, message) {
+        console.error("Failed to load model:", message);
     });
 
-    // Auto kamera fokus ke seluruh scene
-    scene.createDefaultCameraOrLight(true, true, true);
-    scene.activeCamera.alpha += Math.PI;
-    scene.activeCamera.radius = 1;
+    // Render loop
+    engine.runRenderLoop(function () {
+        scene.render();
+    });
 
-}, null, function (scene, message) {
-    console.error("❌ Gagal memuat model:", message);
+    // Resize event
+    window.addEventListener('resize', function () {
+        engine.resize();
+    });
 });
-
-// Render loop
-engine.runRenderLoop(() => {
-    scene.render();
-});
-window.addEventListener("resize", () => engine.resize());
