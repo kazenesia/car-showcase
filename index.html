@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>3D Car Showroom</title>
+
+  <!-- BabylonJS core -->
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+
+  <!-- BabylonJS GLTF loader plugin -->
+  <script src="https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.min.js"></script>
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+  <canvas id="renderCanvas"></canvas>
+
+<div id="infoPanel">
+  <h2>Ford Mustang Hoonicorn 1965 (Custom)</h2>
+  <h3>Spesifikasi</h3>
+  <ul>
+    <li><strong>Merk:</strong> Ford</li>
+    <li><strong>Tahun:</strong> 1965</li>
+    <li><strong>Mesin:</strong> 6.7L V8</li>
+    <li><strong>Horsepower:</strong> 845 hp</li>
+  </ul>
+</div>
+
+  <div id="carousel">
+    <button onclick="selectCar(0)">Mobil 1</button>
+    <button onclick="selectCar(1)">Mobil 2</button>
+    <button onclick="selectCar(2)">Mobil 3</button>
+    <button onclick="selectCar(3)">Mobil 4</button>
+    <button onclick="selectCar(4)">Mobil 5</button>
+    <button onclick="selectCar(5)">Mobil 6</button>
+  </div>
+
+  <!-- Main JS -->
+  <script src="/scripts/showroom.js" defer></script>
+</body>
+</html>
